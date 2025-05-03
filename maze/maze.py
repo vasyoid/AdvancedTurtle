@@ -64,17 +64,26 @@ class Turtle:
     def right(self):
         self._t.right(90)
 
-    def color(self, *args, **kwargs):
-        return self._t.color(*args, **kwargs)
+    def color(self, color):
+        return self._t.color(color)
 
-    def speed(self, *args, **kwargs):
-        return self._t.speed(*args, **kwargs)
+    def speed(self, speed=None):
+        return self._t.speed(speed)
 
     def down(self):
         return self._t.down()
 
     def up(self):
         return self._t.up()
+
+    def isdown(self):
+        return self._t.isdown()
+
+    def onclick(self, fun, btn=1, add=None):
+        return self._t.onclick(fun, btn, add)
+
+    def clear(self):
+        return self._t.clear()
 
 
 class Maze:
@@ -203,6 +212,26 @@ def mainloop():
 
 def tracer(n):
     _screen.tracer(n)
+
+
+def update():
+    _screen.update()
+
+
+def onkey(fun, key):
+    _screen.onkey(fun, key)
+
+
+def getscreen():
+    return _screen
+
+
+def onkeypress(fun, key=None):
+    return _screen.onkeypress(fun, key)
+
+
+def ontimer(fun, t = 0):
+    return _screen.ontimer(fun, t)
 
 _screen = turtle.Screen()
 _screen.setup(_SCREEN_WIDTH + _MARGIN, _SCREEN_HEIGHT + _MARGIN)
