@@ -32,6 +32,9 @@ class Turtle:
     def has_wall_left(self):
         return _maze.has_wall(*self._current_cell(), (self._current_direction() + 1) % 4)
 
+    def has_wall_backward(self):
+        return _maze.has_wall(*self._current_cell(), (self._current_direction() + 2) % 4)
+
     def has_wall_right(self):
         return _maze.has_wall(*self._current_cell(), (self._current_direction() + 3) % 4)
 
@@ -56,7 +59,18 @@ class Turtle:
             self._t.forward(_CELL_SIZE)
 
     def backward(self):
-        self._t.backward(_CELL_SIZE)
+        if self.has_wall_backward():
+            s = self._t.speed()
+            self._t.speed(6)
+            self._t.left(10)
+            for _ in range(5):
+                self._t.right(20)
+                self._t.left(20)
+                pass
+            self._t.right(10)
+            self._t.speed(s)
+        else:
+            self._t.backward(_CELL_SIZE)
 
     def left(self):
         self._t.left(90)
