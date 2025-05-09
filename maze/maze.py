@@ -20,8 +20,16 @@ class Turtle:
         _screen.update()
 
     def _current_cell(self):
-        x, y = map(int, self._t.pos())
+        return self._cell(*map(int, self._t.pos()))
+
+    def _next_cell(self):
+        cx, cy = self._current_cell()
+        shift = [(1, 0), (0, 1), (-1, 0), (0, -1)][self._current_direction()]
+        return cx + shift[0], cy + shift[1]
+
+    def _cell(self, x, y):
         return (x + _SCREEN_WIDTH // 2) // _CELL_SIZE, (y + _SCREEN_HEIGHT // 2) // _CELL_SIZE
+
 
     def _current_direction(self):
         return int(self._t.heading()) // 90
@@ -44,33 +52,31 @@ class Turtle:
     def cell_color(self):
         return _maze.cell_color(*self._current_cell())
 
+    def next_cell_color(self):
+        return _maze.cell_color(*self._next_cell())
+
     def forward(self):
         if self.has_wall_forward():
-            s = self._t.speed()
-            self._t.speed(6)
-            self._t.left(10)
-            for _ in range(5):
-                self._t.right(20)
-                self._t.left(20)
-                pass
-            self._t.right(10)
-            self._t.speed(s)
+            self._shake()
         else:
             self._t.forward(_CELL_SIZE)
 
     def backward(self):
         if self.has_wall_backward():
-            s = self._t.speed()
-            self._t.speed(6)
-            self._t.left(10)
-            for _ in range(5):
-                self._t.right(20)
-                self._t.left(20)
-                pass
-            self._t.right(10)
-            self._t.speed(s)
+            self._shake()
         else:
             self._t.backward(_CELL_SIZE)
+
+    def _shake(self):
+        s = self._t.speed()
+        self._t.speed(6)
+        self._t.left(10)
+        for _ in range(5):
+            self._t.right(20)
+            self._t.left(20)
+            pass
+        self._t.right(10)
+        self._t.speed(s)
 
     def left(self):
         self._t.left(90)
@@ -135,6 +141,8 @@ class Maze:
         self._draw_cell(cx, cy)
 
     def cell_color(self, cx, cy):
+        if not 0 <= cy < self.height or not 0 <= cx < self.width:
+            return "white"
         return self._colors[cy][cx]
 
     def _draw_cell(self, cx, cy):
