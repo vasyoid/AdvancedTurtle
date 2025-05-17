@@ -53,6 +53,8 @@ class Turtle:
         return _maze.cell_color(*self._current_cell())
 
     def next_cell_color(self):
+        if self.has_wall_forward():
+            return None
         return _maze.cell_color(*self._next_cell())
 
     def forward(self):
