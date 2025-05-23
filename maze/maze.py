@@ -2,8 +2,8 @@ import random
 import turtle
 
 _MARGIN = 40
-_SCREEN_WIDTH = 680
-_SCREEN_HEIGHT = 680
+_SCREEN_WIDTH = 640
+_SCREEN_HEIGHT = 640
 _CELL_SIZE = 40
 
 
@@ -113,14 +113,15 @@ class Maze:
     _DY = [-1, 0, 1, 0]
     _OPPOSITE = [2, 3, 0, 1]
 
-    def __init__(self, width, height):
+    def __init__(self, width, height, finish=True):
         self.width = width
         self.height = height
         self._grid = [[0b1111 for _ in range(width)] for _ in range(height)]
         self._colors = [["white" for _ in range(width)] for _ in range(height)]
         self._visited = [[False for _ in range(width)] for _ in range(height)]
         self._generate()
-        self._colors[random.randint(0, self.height - 1)][random.randint(0, self.width - 1)] = "green"
+        if finish:
+            self._colors[random.randint(0, self.height - 1)][random.randint(0, self.width - 1)] = "green"
 
     def _generate(self, cx=0, cy=0):
         self._visited[cy][cx] = True
@@ -229,6 +230,12 @@ def new_cyclic_maze(seed=None):
     _maze.drop_walls(100)
     _maze.draw()
 
+
+def new_maze_without_finish(seed=None):
+    global _maze
+    random.seed(seed)
+    _maze = Maze(_SCREEN_WIDTH // _CELL_SIZE, _SCREEN_HEIGHT // _CELL_SIZE, finish=False)
+    _maze.draw()
 
 def mainloop():
     _screen.mainloop()
