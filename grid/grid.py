@@ -211,10 +211,10 @@ class Grid:
         self._remove_obstacle(cx, cy, self._enemies)
 
     def has_food(self, cx, cy):
-        return isinstance(self._grid[cy][cx], Food)
+        return self.in_field(cx, cy) and isinstance(self._grid[cy][cx], Food)
 
     def has_enemy(self, cx, cy):
-        return isinstance(self._grid[cy][cx], Enemy)
+        return self.in_field(cx, cy) and isinstance(self._grid[cy][cx], Enemy)
 
     def nearest_food(self, cx, cy, direction):
         dx, dy = [(1, 0), (0, 1), (-1, 0), (0, -1)][direction]
