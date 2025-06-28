@@ -45,8 +45,13 @@ _drawer.hideturtle()
 _drawer.up()
 
 
+def _toggle_color(t):
+    t.color("yellow" if t.color()[0] == "black" else "black")
+    _screen.update()
+
+
 def _init_onclick(t):
-    t.onclick(lambda x, y: t.color("yellow") or _screen.update())
+    t.onclick(lambda x, y: _toggle_color(t))
 
 
 def _refresh():
@@ -95,9 +100,11 @@ def _try_swap(swap):
         _selectors[i].color("black")
     _draw_numbers()
 
+
 def _call_and_update(fun, *args):
     fun(*args)
     _draw_numbers()
+
 
 def setup(sum, min, max, min_pos, max_pos, swap, sort):
     ts = []
