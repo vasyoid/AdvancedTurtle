@@ -25,8 +25,16 @@ def swap(numbers, a, b):
     return
 
 
-def sort(numbers):
+def bubble_sort(numbers):
     return
 
 
-list.setup(sum, min, max, min_pos, max_pos, swap, sort)
+def insertion_sort(numbers):
+    return
+
+
+def selection_sort(numbers):
+    return
+
+
+list.setup(sum, min, max, min_pos, max_pos, swap, bubble_sort, insertion_sort, selection_sort)
