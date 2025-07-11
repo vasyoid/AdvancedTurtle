@@ -52,6 +52,15 @@ class Turtle:
     def nearest_food_forward(self):
         return _grid.nearest_food(*self._current_cell(), self._current_direction())
 
+    def get_all_food(self):
+        return _grid.get_all_food()
+
+    def get_all_enemies(self):
+        return _grid.get_all_enemies()
+
+    def pos(self):
+        return self._current_cell()
+
     def forward(self):
         if self.can_go_forward():
             self._t.forward(_CELL_SIZE)
@@ -277,6 +286,15 @@ class Grid:
                         self._add_obstacle(cx, cy, obstacles)
         _screen.tracer(tr)
 
+    def _get_all_obstacles(self, clazz):
+        return [(cx, cy) for cx in range(self.width) for cy in range(self.height) if
+                isinstance(self._grid[cy][cx], clazz)]
+
+    def get_all_food(self):
+        return self._get_all_obstacles(Food)
+
+    def get_all_enemies(self):
+        return self._get_all_obstacles(Enemy)
 
 def level1(steps=-1, seed=None):
     _new_game(1, steps, seed)
