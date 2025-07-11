@@ -8,47 +8,51 @@ class ListElement:
     def __init__(self, value=0):
         self.value = value
         self.shift = (0, 0)
-        self.highlighted = False
+        self.highlighted = None
 
     def _highlight_and_draw(self, other):
-        self.highlighted = other.highlighted = True
+        self.highlighted = "orange"
+        if isinstance(other, ListElement):
+            other.highlighted = "orange"
         _draw_numbers()
-        self.highlighted = other.highlighted = False
+        self.highlighted = None
+        if isinstance(other, ListElement):
+            other.highlighted = None
         time.sleep(0.5)
 
     def __lt__(self, other):
+        self._highlight_and_draw(other)
         if isinstance(other, ListElement):
-            self._highlight_and_draw(other)
             return self.value < other.value
         return self.value < other
 
     def __le__(self, other):
+        self._highlight_and_draw(other)
         if isinstance(other, ListElement):
-            self._highlight_and_draw(other)
             return self.value <= other.value
         return self.value <= other
 
     def __gt__(self, other):
+        self._highlight_and_draw(other)
         if isinstance(other, ListElement):
-            self._highlight_and_draw(other)
             return self.value > other.value
         return self.value > other
 
     def __ge__(self, other):
+        self._highlight_and_draw(other)
         if isinstance(other, ListElement):
-            self._highlight_and_draw(other)
             return self.value >= other.value
         return self.value >= other
 
     def __eq__(self, other):
+        self._highlight_and_draw(other)
         if isinstance(other, ListElement):
-            self._highlight_and_draw(other)
             return self.value == other.value
         return self.value == other
 
     def __ne__(self, other):
+        self._highlight_and_draw(other)
         if isinstance(other, ListElement):
-            self._highlight_and_draw(other)
             return self.value != other.value
         return self.value != other
 
@@ -71,7 +75,7 @@ class MyList(list[ListElement]):
     def swap(self, a, b):
         if a > b:
             a, b = b, a
-        self[a].highlighted = self[b].highlighted = True
+        self[a].highlighted = self[b].highlighted = "orange"
         w = _SCREEN_WIDTH // len(_numbers)
         r = w * (b - a) // 2
         for i in range(101):
@@ -80,7 +84,7 @@ class MyList(list[ListElement]):
             self[b].shift = ((math.cos(angle) - 1) * r, -math.sin(angle) * r)
             _draw_numbers()
             time.sleep(0.005)
-        self[a].highlighted = self[b].highlighted = False
+        self[a].highlighted = self[b].highlighted = None
         self[a].shift = self[b].shift = (0, 0)
         self[a], self[b] = self[b], self[a]
         _draw_numbers()
@@ -98,7 +102,7 @@ _selectors = []
 
 
 def _draw_rect(x, y, w, h, element: ListElement):
-    _drawer.color("orange" if element.highlighted else "lightgreen")
+    _drawer.color(element.highlighted or "lightgreen")
     _drawer.setpos(x, y)
     _drawer.setheading(0)
     _drawer.down()
@@ -127,9 +131,9 @@ def _draw_numbers():
 
 
 def _highlight_and_draw(pos):
-    _numbers[pos].highlighted = True
+    _numbers[pos].highlighted = "orange"
     _draw_numbers()
-    _numbers[pos].highlighted = False
+    _numbers[pos].highlighted = None
 
 
 _drawer = turtle.Turtle()
@@ -202,7 +206,28 @@ def _nums_list():
     return [el.value for el in _numbers]
 
 
-def setup(sum, min, max, min_pos, max_pos, swap, bubble_sort, insertion_sort, selection_sort):
+def _sort():
+    values = sorted(_nums_list())
+    for i in range(len(_numbers)):
+        _numbers[i].value = values[i]
+    _draw_numbers()
+
+
+def _search(binary_search, t):
+    x = random.randint(1, 20)
+    _write_with_clear_and_update(t, f"search {x}")
+    pos = binary_search(_numbers, x)
+    if pos is None:
+        return
+    if pos < len(_numbers) and _numbers[pos].value == x:
+        _numbers[pos].highlighted = "green"
+    else:
+        _numbers[pos].highlighted = "red"
+    _draw_numbers()
+    _numbers[pos].highlighted = None
+
+
+def setup(sum, min, max, min_pos, max_pos, swap, bubble_sort, insertion_sort, selection_sort, binary_search):
     ts = []
     for i in range(6):
         t = turtle.Turtle("turtle")
@@ -210,7 +235,7 @@ def setup(sum, min, max, min_pos, max_pos, swap, bubble_sort, insertion_sort, se
         t.setpos(-_SCREEN_WIDTH // 2 + 20, -40 * i)
         ts.append(t)
 
-    for i in range(6, 10):
+    for i in range(6, 12):
         t = turtle.Turtle("turtle")
         t.up()
         t.setpos(20, 240 - 40 * i)
@@ -226,6 +251,8 @@ def setup(sum, min, max, min_pos, max_pos, swap, bubble_sort, insertion_sort, se
     _write_nice(ts[7], "insertion sort")
     _write_nice(ts[8], "selection sort")
     _write_nice(ts[9], "refresh")
+    _write_nice(ts[10], "quick sort")
+    _write_nice(ts[11], "search")
 
     ts[0].onclick(lambda x, y: _write_with_clear_and_update(ts[0], f"sum: {sum(_nums_list())}"))
     ts[1].onclick(lambda x, y: _write_with_clear_and_update(ts[1], f"min: {min(_nums_list())}"))
@@ -237,6 +264,9 @@ def setup(sum, min, max, min_pos, max_pos, swap, bubble_sort, insertion_sort, se
     ts[7].onclick(lambda x, y: _call_and_update(insertion_sort, _numbers))
     ts[8].onclick(lambda x, y: _call_and_update(selection_sort, _numbers))
     ts[9].onclick(lambda x, y: _refresh())
+    ts[10].onclick(lambda x, y: _sort())
+    ts[11].onclick(lambda x, y: _search(binary_search, ts[11]))
+
     _screen.update()
     _screen.listen()
     _screen.mainloop()

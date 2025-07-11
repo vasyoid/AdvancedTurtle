@@ -37,4 +37,8 @@ def selection_sort(numbers):
     return
 
 
-list.setup(sum, min, max, min_pos, max_pos, swap, bubble_sort, insertion_sort, selection_sort)
+def binary_search(numbers, x):
+    return 0
+
+
+list.setup(sum, min, max, min_pos, max_pos, swap, bubble_sort, insertion_sort, selection_sort, binary_search)
